@@ -22,8 +22,5 @@ public class TileProperties : MonoBehaviour
         float[] massXYArray = new float[] {tileMass, xPos, yPos};
         ship.SendMessage("CentreOfMass", massXYArray, SendMessageOptions.DontRequireReceiver);
     }
-    void FixedUpdate()
-    {
-        
-    }
+
 }

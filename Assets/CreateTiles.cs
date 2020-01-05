@@ -1,21 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class CreateTiles : MonoBehaviour
 {
     public GameObject tilePrefab;
     public GameObject thrusterPrefab;
     public Camera mainCamera;
-    void Start()
-    {
-        float xStand = 0.32f;
-        float yStand = 0.32f;
-        Instantiate(tilePrefab, transform.position + new Vector3(0, 0), transform.rotation, transform);
-        Instantiate(tilePrefab, transform.position + new Vector3(xStand, 0), transform.rotation, transform);
-        Instantiate(tilePrefab, transform.position + new Vector3(0, yStand), transform.rotation, transform);
-        Instantiate(tilePrefab, transform.position + new Vector3(xStand, yStand), transform.rotation, transform);        
-    }
 
     public float NearestMultiple(float multipleOf,  float inValue)
     {
@@ -40,7 +32,7 @@ public class CreateTiles : MonoBehaviour
             return lower;
         }
     }
-    void FixedUpdate()
+    void Update()
     {         
         if (Input.GetMouseButtonDown(0))
         {

@@ -2,38 +2,95 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public class Force
+{
+    //Characteristics
+    Vector2 relativeForce;
+    float torque;    
+    bool isAdding;
+
+    //Constructor
+    public Force(Vector2 inRelativeForce, float inTorque, bool inIsAdding)
+    {
+        relativeForce = inRelativeForce;
+        torque = inTorque;
+        isAdding = inIsAdding;
+    }
+
+    //Setters
+    public void SetRelativeForce(Vector2 inRelativeForce)
+    {
+        relativeForce = inRelativeForce;
+    }
+    public void SetTorque(float inTorque)
+    {
+        torque = inTorque;
+    }
+    public void SetIsAdding(bool inIsAdding)
+    {
+        isAdding = inIsAdding;
+    }
+
+    //Getters
+    public Vector2 GetRelativeForce()
+    {
+        return relativeForce;
+    }
+    public float GetTorque()
+    {
+        return torque;
+    }
+    public bool GetIsAdding()
+    {
+        return isAdding;
+    }
+}
+
 public class ThrusterProperties : MonoBehaviour
 {
     //for now thrusters will have no mass, may change in future
 
     GameObject centre;
     GameObject ship; 
+
     float forceMagnitude = 10;
-    Vector3 radius;
+
+    Vector2 radius;
+
+    Vector2 force;
     float torque;
     float theta;
-    Vector3[] data = new Vector3[2];
-    Vector3 fakeTorque;
+
     void Start()
     {
+        //find centre of mass and ship game objects
         centre = GameObject.FindWithTag("Centre");
-        ship = GameObject.FindWithTag("Ship");
-        Vector3 force = Vector3.right * forceMagnitude;
+        ship = GameObject.FindWithTag("Ship");      
+        
+        //calculate the radius vector with A->B = b - a 
         radius = transform.position - centre.transform.position;
-        Vector3 axis = new Vector3();
-        axis.Set(0, 0, 1);
-        theta = Vector3.SignedAngle(radius, force, axis);
+
+        //calculate the force vector applied by the thruster
+        force = Vector2.right * forceMagnitude;
+
+        //calculate the angle between the radius and force vectors
+        theta = Vector2.SignedAngle(radius, force); 
+
+        //calculate the torque applied by the thruster with T = rFsin(theta)
         torque = radius.magnitude * force.magnitude * Mathf.Sin(theta * Mathf.Deg2Rad);
-        fakeTorque.Set(torque, 0, 0);
-        data[0] = fakeTorque;
-        data[1] = force;
     }
 
-    void FixedUpdate()
-    {
-        if (Input.GetKey(KeyCode.W))
+    void Update()
+    {       
+        if (Input.GetKeyDown(KeyCode.W))
         {
-            ship.SendMessage("ForceApplied", data, SendMessageOptions.DontRequireReceiver);
+            Force sendForce = new Force(force, torque, true);
+            ship.SendMessage("ForceApplied", sendForce, SendMessageOptions.DontRequireReceiver);
+        }
+        else if (Input.GetKeyUp(KeyCode.W))
+        {
+            Force sendForce = new Force(force, torque, false);
+            ship.SendMessage("ForceApplied", sendForce, SendMessageOptions.DontRequireReceiver);
         }
     }
 }
