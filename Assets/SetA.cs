@@ -4,15 +4,17 @@ using UnityEngine;
 
 public class SetA : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public GameObject ship;
+    void OnMouseDown()
     {
-        
+        ship.SendMessage("SendKey", "a");
     }
-
-    // Update is called once per frame
-    void Update()
+    void OnMouseEnter()
     {
-        
+        ship.SendMessage("CantPlace", true);
+    }
+    void OnMouseExit()
+    {
+        ship.SendMessage("CantPlace", false);
     }
 }

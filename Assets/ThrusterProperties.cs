@@ -53,13 +53,15 @@ public class ThrusterProperties : MonoBehaviour
     GameObject centre;
     GameObject ship; 
 
-    float forceMagnitude = 10;
+    float forceMagnitude = 100;
 
     Vector2 radius;
 
     Vector2 force;
     float torque;
     float theta;
+    string activeKey;
+    KeyCode activeKeyCode;
 
     void Start()
     {
@@ -87,14 +89,30 @@ public class ThrusterProperties : MonoBehaviour
     {
         ship.SendMessage("CantPlace",false);
     }
+    public void ActiveKey(string inKey)
+    {
+        activeKey = inKey;
+        if (activeKey == "w")
+        {
+            activeKeyCode = KeyCode.W;
+        }
+        else if (activeKey == "a")
+        {
+            activeKeyCode = KeyCode.A;
+        }
+        else if (activeKey == "d")
+        {
+            activeKeyCode = KeyCode.D;
+        }
+    }
     void Update()
     {       
-        if (Input.GetKeyDown(KeyCode.W))
+        if (Input.GetKeyDown(activeKeyCode))
         {
             Force sendForce = new Force(force, torque, true);
             ship.SendMessage("ForceApplied", sendForce, SendMessageOptions.DontRequireReceiver);
         }
-        else if (Input.GetKeyUp(KeyCode.W))
+        else if (Input.GetKeyUp(activeKeyCode))
         {
             Force sendForce = new Force(force, torque, false);
             ship.SendMessage("ForceApplied", sendForce, SendMessageOptions.DontRequireReceiver);

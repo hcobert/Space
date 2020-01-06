@@ -13,6 +13,7 @@ public class CreateTiles : MonoBehaviour
     bool cantPlace;
     Quaternion currentRotation;
     float currentRotationZ = 0;
+    string sendKey;
     void Start()
     {
         currentRotation = transform.rotation;
@@ -52,6 +53,10 @@ public class CreateTiles : MonoBehaviour
     {
         cantPlace = inCantPlace;
     }
+    public void SendKey(string inKey)
+    {
+        sendKey = inKey;
+    }
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.R))
@@ -75,6 +80,7 @@ public class CreateTiles : MonoBehaviour
             else if (selected == "thruster")
             {                
                 Instantiate(thrusterPrefab, placePos, currentRotation, transform);
+                transform.GetChild(transform.childCount - 1).SendMessage("ActiveKey",sendKey,SendMessageOptions.DontRequireReceiver);
             }
         }       
     }
