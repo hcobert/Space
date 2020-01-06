@@ -66,12 +66,12 @@ public class ThrusterProperties : MonoBehaviour
         //find centre of mass and ship game objects
         centre = GameObject.FindWithTag("Centre");
         ship = GameObject.FindWithTag("Ship");      
-        
+      
         //calculate the radius vector with A->B = b - a 
         radius = transform.position - centre.transform.position;
 
         //calculate the force vector applied by the thruster
-        force = Vector2.right * forceMagnitude;
+        force = transform.right * forceMagnitude;
 
         //calculate the angle between the radius and force vectors
         theta = Vector2.SignedAngle(radius, force); 
@@ -79,7 +79,14 @@ public class ThrusterProperties : MonoBehaviour
         //calculate the torque applied by the thruster with T = rFsin(theta)
         torque = radius.magnitude * force.magnitude * Mathf.Sin(theta * Mathf.Deg2Rad);
     }
-
+    void OnMouseEnter()
+    {
+        ship.SendMessage("CantPlace",true);   
+    }
+    void OnMouseExit()
+    {
+        ship.SendMessage("CantPlace",false);
+    }
     void Update()
     {       
         if (Input.GetKeyDown(KeyCode.W))

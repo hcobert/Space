@@ -22,5 +22,14 @@ public class TileProperties : MonoBehaviour
         float[] massXYArray = new float[] {tileMass, xPos, yPos};
         ship.SendMessage("CentreOfMass", massXYArray, SendMessageOptions.DontRequireReceiver);
     }
-
+    void OnMouseEnter()
+    {
+        ship.SendMessage("CantPlace", true);
+        Debug.Log("Entered Tile");
+    }
+    void OnMouseExit()
+    {
+        ship.SendMessage("CantPlace", false);
+        Debug.Log("Exited Tile");
+    }
 }

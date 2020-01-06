@@ -9,6 +9,14 @@ public class CreateTiles : MonoBehaviour
     public GameObject thrusterPrefab;
     public Camera mainCamera;
 
+    string selected = "unselected";
+    bool cantPlace;
+    Quaternion currentRotation;
+    float currentRotationZ = 0;
+    void Start()
+    {
+        currentRotation = transform.rotation;
+    }
     public float NearestMultiple(float multipleOf,  float inValue)
     {
         float lower = inValue - (inValue % multipleOf);
@@ -32,23 +40,42 @@ public class CreateTiles : MonoBehaviour
             return lower;
         }
     }
+    public void TileSelected()
+    {
+        selected = "tile";
+    }
+    public void ThrusterSelected()
+    {
+        selected = "thruster";
+    }
+    public void CantPlace(bool inCantPlace)
+    {
+        cantPlace = inCantPlace;
+    }
     void Update()
-    {         
-        if (Input.GetMouseButtonDown(0))
+    {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            currentRotationZ += 90;
+            currentRotation = transform.rotation;
+            currentRotation.SetEulerAngles(0,0,currentRotationZ * Mathf.Deg2Rad);
+        }
+        if (Input.GetMouseButtonDown(0) && (cantPlace == false))
         {
             Vector3 placePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
             placePos.z = 0;
             placePos.x = NearestMultiple(0.32f, placePos.x);
             placePos.y = NearestMultiple(0.32f, placePos.y);
-            Instantiate(tilePrefab, placePos, transform.rotation, transform);
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            Vector3 placePos = mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            placePos.z = 0;
-            placePos.x = NearestMultiple(0.32f, placePos.x);
-            placePos.y = NearestMultiple(0.32f, placePos.y);
-            Instantiate(thrusterPrefab, placePos, transform.rotation, transform);
-        }
+            //place basic tile
+            if (selected == "tile")
+            {                
+                Instantiate(tilePrefab, placePos, currentRotation, transform);
+            }
+            //place thruster
+            else if (selected == "thruster")
+            {                
+                Instantiate(thrusterPrefab, placePos, currentRotation, transform);
+            }
+        }       
     }
 }
