@@ -104,6 +104,10 @@ public class ThrusterProperties : MonoBehaviour
         {
             activeKeyCode = KeyCode.D;
         }
+        else if (activeKey == "s")
+        {
+            activeKeyCode = KeyCode.S;
+        }
     }
     void Update()
     {       
